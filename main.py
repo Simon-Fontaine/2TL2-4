@@ -68,9 +68,7 @@ class Colonie:
         self.reine = Reine()
         self.nourriture = Nourriture(quantite_nourriture)
         self.jour = 0
-        self.quantite_fourmis_initiale = (
-            quantite_fourmis_initiale + 1
-        )  # on ajoute la reine
+        self.fourmis_nees = quantite_fourmis_initiale + 1  # on ajoute la reine
 
     @property
     def quantite_fourmis(self):
@@ -78,10 +76,7 @@ class Colonie:
 
     @property
     def quantite_fourmis_mortes(self):
-        total_fourmis = (
-            self.quantite_fourmis_initiale + self.jour * self.reine.taux_oeufs
-        )
-        return total_fourmis - self.quantite_fourmis
+        return self.fourmis_nees - self.quantite_fourmis
 
     def _mettre_a_jour_fourmis(self):
         self.reine.grandir()
@@ -99,6 +94,7 @@ class Colonie:
             fourmi = oeuf.grandir()
             if fourmi:
                 nouvelles_fourmis.append(fourmi)
+                self.fourmis_nees += 1
 
         self.fourmis.extend(nouvelles_fourmis)
         self.oeufs = [oeuf for oeuf in self.oeufs if not oeuf.est_eclos]
