@@ -1,4 +1,5 @@
 import time
+import random
 
 
 class Nourriture:
@@ -6,7 +7,10 @@ class Nourriture:
         self.quantite = quantite_initiale
 
     def retirer_quantite(self, quantite):
-        self.quantite -= quantite
+        if self.quantite >= quantite:
+            self.quantite -= quantite  # pour éviter d'avoir une quantité négative
+        else:
+            self.quantite = 0
 
 
 class Fourmi:
@@ -32,25 +36,41 @@ class Fourmi:
         self.est_vivante = False
 
 
+class Oeuf:
+    def __init__(self):
+        self.age = 0
+        self.est_eclos = False
+
+    def grandir(self):
+        self.age += 1
+        if self.age >= 3 and random.random() < 0.8:  # 80% de chance d'éclore
+            self.est_eclos = True
+            return Fourmi()
+        return None
+
+
 class Reine(Fourmi):
     def __init__(self):
         super().__init__()
         self.age_max = 56
-        self.taux_oeufs = 100
+        self.taux_oeufs = 10
 
-    def pondre_fourmis(self):
+    def pondre_oeufs(self):
         if self.est_vivante:
-            return [Fourmi() for _ in range(self.taux_oeufs)]
+            return [Oeuf() for _ in range(self.taux_oeufs)]
         return []
 
 
 class Colonie:
     def __init__(self, quantite_fourmis_initiale, quantite_nourriture):
         self.fourmis = [Fourmi() for _ in range(quantite_fourmis_initiale)]
+        self.oeufs = []
         self.reine = Reine()
         self.nourriture = Nourriture(quantite_nourriture)
         self.jour = 0
-        self.quantite_fourmis_initiale = quantite_fourmis_initiale + 1  # pour la reine
+        self.quantite_fourmis_initiale = (
+            quantite_fourmis_initiale + 1
+        )  # on ajoute la reine
 
     @property
     def quantite_fourmis(self):
@@ -71,15 +91,25 @@ class Colonie:
             fourmi.grandir()
             fourmi.manger(self.nourriture)
 
-        # on enlève les fourmis mortes
         self.fourmis = [fourmi for fourmi in self.fourmis if fourmi.est_vivante]
 
-    def _pondre_fourmis(self):
-        self.fourmis.extend(self.reine.pondre_fourmis())
+    def _mettre_a_jour_oeufs(self):
+        nouvelles_fourmis = []
+        for oeuf in self.oeufs:
+            fourmi = oeuf.grandir()
+            if fourmi:
+                nouvelles_fourmis.append(fourmi)
+
+        self.fourmis.extend(nouvelles_fourmis)
+        self.oeufs = [oeuf for oeuf in self.oeufs if not oeuf.est_eclos]
+
+    def _pondre_oeufs(self):
+        self.oeufs.extend(self.reine.pondre_oeufs())
 
     def mettre_a_jour(self):
-        self._pondre_fourmis()
         self._mettre_a_jour_fourmis()
+        self._mettre_a_jour_oeufs()
+        self._pondre_oeufs()
         self.jour += 1
 
 
@@ -109,10 +139,11 @@ def demarrer_simulation():
 
     colonie = Colonie(quantite_fourmis_initiale, quantite_nourriture)
 
-    while colonie.fourmis or colonie.reine.est_vivante:
+    while colonie.fourmis or colonie.reine.est_vivante or len(colonie.oeufs) > 0:
         colonie.mettre_a_jour()
         print(f"Jour: {colonie.jour}")
         print(f"Fourmis: {colonie.quantite_fourmis}")
+        print(f"Oeufs: {len(colonie.oeufs)}")
         print(f"Nourriture: {colonie.nourriture.quantite}")
         print(f"Fourmis mortes: {colonie.quantite_fourmis_mortes}\n")
         time.sleep(vitesse_simulation)
