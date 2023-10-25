@@ -150,3 +150,5 @@ def demarrer_simulation():
 
 
 demarrer_simulation()
+
+input("Appuyez sur une ENTER pour quitter...")
