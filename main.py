@@ -8,7 +8,8 @@ class Nourriture:
 
     def retirer_quantite(self, quantite):
         if self.quantite >= quantite:
-            self.quantite -= quantite  # pour éviter d'avoir une quantité négative
+            # Pour éviter d'avoir une quantité négative
+            self.quantite -= quantite
         else:
             self.quantite = 0
 
@@ -40,12 +41,18 @@ class Oeuf:
     def __init__(self):
         self.age = 0
         self.est_eclos = False
+        self.est_mort = False
 
     def grandir(self):
         self.age += 1
-        if self.age >= 3 and random.random() < 0.8:  # 80% de chance d'éclore
-            self.est_eclos = True
-            return Fourmi()
+        if self.age >= 3:
+            # 80% de chance d'éclore
+            if random.random() < 0.8:
+                self.est_eclos = True
+                return Fourmi()
+            else:
+                # Marquer l'oeuf comme mort s'il n'éclos pas
+                self.est_mort = True
         return None
 
 
@@ -68,7 +75,8 @@ class Colonie:
         self.reine = Reine()
         self.nourriture = Nourriture(quantite_nourriture)
         self.jour = 0
-        self.fourmis_nees = quantite_fourmis_initiale + 1  # on ajoute la reine
+        # Pour compter le nombre de fourmis nées + la reine
+        self.fourmis_nees = quantite_fourmis_initiale + 1
 
     @property
     def quantite_fourmis(self):
@@ -97,7 +105,10 @@ class Colonie:
                 self.fourmis_nees += 1
 
         self.fourmis.extend(nouvelles_fourmis)
-        self.oeufs = [oeuf for oeuf in self.oeufs if not oeuf.est_eclos]
+        # Retirer les œufs qui sont éclos ou morts
+        self.oeufs = [
+            oeuf for oeuf in self.oeufs if not oeuf.est_eclos and not oeuf.est_mort
+        ]
 
     def _pondre_oeufs(self):
         self.oeufs.extend(self.reine.pondre_oeufs())
