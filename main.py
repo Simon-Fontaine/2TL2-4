@@ -1,6 +1,11 @@
 import time
 import random
 
+FOURMIS_AGE_MAX = 14
+
+REINE_AGE_MAX = 56
+RINE_NOMBRES_OEUFS = 40
+
 
 class Nourriture:
     def __init__(self, quantite_initiale):
@@ -18,7 +23,7 @@ class Fourmi:
     def __init__(self):
         self.est_vivante = True
         self.age = 0
-        self.age_max = 14
+        self.age_max = FOURMIS_AGE_MAX
 
     def grandir(self):
         if self.est_vivante:
@@ -26,10 +31,10 @@ class Fourmi:
             if self.age >= self.age_max:
                 self.mourir()
 
-    def manger(self, nourriture):
+    def manger(self, nourriture, faim=1):
         if self.est_vivante:
-            if nourriture.quantite > 0:
-                nourriture.retirer_quantite(1)
+            if nourriture.quantite > 0 and nourriture.quantite >= faim:
+                nourriture.retirer_quantite(faim)
             else:
                 self.mourir()
 
@@ -51,7 +56,7 @@ class Oeuf:
                 self.est_eclos = True
                 return Fourmi()
             else:
-                # Marquer l'oeuf comme mort s'il n'éclos pas
+                # Marquer l'œuf comme mort s'il n'éclos pas
                 self.est_mort = True
         return None
 
@@ -59,12 +64,12 @@ class Oeuf:
 class Reine(Fourmi):
     def __init__(self):
         super().__init__()
-        self.age_max = 56
-        self.taux_oeufs = 10
+        self.age_max = REINE_AGE_MAX
+        self.nombres_oeufs = RINE_NOMBRES_OEUFS
 
     def pondre_oeufs(self):
         if self.est_vivante:
-            return [Oeuf() for _ in range(self.taux_oeufs)]
+            return [Oeuf() for _ in range(self.nombres_oeufs)]
         return []
 
 
@@ -88,7 +93,7 @@ class Colonie:
 
     def _mettre_a_jour_fourmis(self):
         self.reine.grandir()
-        self.reine.manger(self.nourriture)
+        self.reine.manger(self.nourriture, faim=self.reine.nombres_oeufs)
 
         for fourmi in self.fourmis:
             fourmi.grandir()
@@ -149,9 +154,10 @@ def demarrer_simulation():
     while colonie.fourmis or colonie.reine.est_vivante or len(colonie.oeufs) > 0:
         colonie.mettre_a_jour()
         print(f"Jour: {colonie.jour}")
-        print(f"Fourmis: {colonie.quantite_fourmis}")
         print(f"Oeufs: {len(colonie.oeufs)}")
+        print(f"Fourmis: {colonie.quantite_fourmis}")
         print(f"Nourriture: {colonie.nourriture.quantite}")
+        print(f"Reine vivante: {colonie.reine.est_vivante}")
         print(f"Fourmis mortes: {colonie.quantite_fourmis_mortes}\n")
         time.sleep(vitesse_simulation)
 
