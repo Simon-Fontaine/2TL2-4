@@ -4,7 +4,7 @@ import random
 FOURMIS_AGE_MAX = 14
 
 REINE_AGE_MAX = 56
-RINE_NOMBRES_OEUFS = 40
+REINE_NOMBRES_OEUFS = 40
 
 
 class Nourriture:
@@ -65,7 +65,7 @@ class Reine(Fourmi):
     def __init__(self):
         super().__init__()
         self.age_max = REINE_AGE_MAX
-        self.nombres_oeufs = RINE_NOMBRES_OEUFS
+        self.nombres_oeufs = REINE_NOMBRES_OEUFS
 
     def pondre_oeufs(self):
         if self.est_vivante:
