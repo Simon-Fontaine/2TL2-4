@@ -11,6 +11,9 @@ class Nourriture:
     def __init__(self, quantite_initiale):
         self.quantite = quantite_initiale
 
+    def __str__(self):
+        return f"Nourriture: {self.quantite}\n"
+
     def retirer_quantite(self, quantite):
         if self.quantite >= quantite:
             # Pour éviter d'avoir une quantité négative
@@ -24,6 +27,9 @@ class Fourmi:
         self.est_vivante = True
         self.age = 0
         self.age_max = FOURMIS_AGE_MAX
+
+    def __str__(self):
+        return f"Fourmi: {self.est_vivante}\nAge: {self.age}\n"
 
     def grandir(self):
         if self.est_vivante:
@@ -48,6 +54,9 @@ class Oeuf:
         self.est_eclos = False
         self.est_mort = False
 
+    def __str__(self):
+        return f"Oeuf: {self.est_eclos}\nAge: {self.age}\n"
+
     def grandir(self):
         self.age += 1
         if self.age >= 3:
@@ -67,6 +76,11 @@ class Reine(Fourmi):
         self.age_max = REINE_AGE_MAX
         self.nombres_oeufs = REINE_NOMBRES_OEUFS
 
+    def __str__(self):
+        return (
+            f"Reine: {self.est_vivante}\nAge: {self.age}\nOeufs: {self.nombres_oeufs}\n"
+        )
+
     def pondre_oeufs(self):
         if self.est_vivante:
             return [Oeuf() for _ in range(self.nombres_oeufs)]
@@ -82,6 +96,9 @@ class Colonie:
         self.jour = 0
         # Pour compter le nombre de fourmis nées + la reine
         self.fourmis_nees = quantite_fourmis_initiale + 1
+
+    def __str__(self):
+        return f"Jour: {self.jour}\nOeufs: {len(self.oeufs)}\nFourmis: {self.quantite_fourmis}\nNourriture: {self.nourriture.quantite}\nReine vivante: {self.reine.est_vivante}\nFourmis mortes: {self.quantite_fourmis_mortes}\n"
 
     @property
     def quantite_fourmis(self):
@@ -153,12 +170,7 @@ def demarrer_simulation():
 
     while colonie.fourmis or colonie.reine.est_vivante or len(colonie.oeufs) > 0:
         colonie.mettre_a_jour()
-        print(f"Jour: {colonie.jour}")
-        print(f"Oeufs: {len(colonie.oeufs)}")
-        print(f"Fourmis: {colonie.quantite_fourmis}")
-        print(f"Nourriture: {colonie.nourriture.quantite}")
-        print(f"Reine vivante: {colonie.reine.est_vivante}")
-        print(f"Fourmis mortes: {colonie.quantite_fourmis_mortes}\n")
+        print(colonie)
         time.sleep(vitesse_simulation)
 
 
