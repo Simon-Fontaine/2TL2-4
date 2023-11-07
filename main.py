@@ -77,9 +77,7 @@ class Reine(Fourmi):
         self.nombres_oeufs = REINE_NOMBRES_OEUFS
 
     def __str__(self):
-        return (
-            f"Reine: {self.est_vivante}\nAge: {self.age}\nOeufs: {self.nombres_oeufs}\n"
-        )
+        return f"Reine: {self.est_vivante}\nAge: {self.age}\nOeufs: {self.nombres_oeufs}\n"
 
     def pondre_oeufs(self):
         if self.est_vivante:
@@ -98,7 +96,12 @@ class Colonie:
         self.fourmis_nees = quantite_fourmis_initiale + 1
 
     def __str__(self):
-        return f"Jour: {self.jour}\nOeufs: {len(self.oeufs)}\nFourmis: {self.quantite_fourmis}\nNourriture: {self.nourriture.quantite}\nReine vivante: {self.reine.est_vivante}\nFourmis mortes: {self.quantite_fourmis_mortes}\n"
+        return f"""Jour: {self.jour}
+Oeufs: {len(self.oeufs)}
+Fourmis: {self.quantite_fourmis}
+Nourriture: {self.nourriture.quantite}
+Reine vivante: {self.reine.est_vivante}
+Fourmis mortes: {self.quantite_fourmis_mortes}\n"""
 
     @property
     def quantite_fourmis(self):
@@ -128,9 +131,7 @@ class Colonie:
 
         self.fourmis.extend(nouvelles_fourmis)
         # Retirer les œufs qui sont éclos ou morts
-        self.oeufs = [
-            oeuf for oeuf in self.oeufs if not oeuf.est_eclos and not oeuf.est_mort
-        ]
+        self.oeufs = [oeuf for oeuf in self.oeufs if not oeuf.est_eclos and not oeuf.est_mort]
 
     def _pondre_oeufs(self):
         self.oeufs.extend(self.reine.pondre_oeufs())
@@ -144,16 +145,14 @@ class Colonie:
 
 def obtenir_entrees():
     try:
-        quantite_fourmis_initiale = int(
-            input("Entrez la quantité initiale de fourmis: ")
-        )
+        quantite_fourmis_initiale = int(input("Entrez la quantité initiale de fourmis: "))
         quantite_nourriture = int(input("Entrez la quantité initiale de nourriture: "))
-        vitesse_simulation = float(
-            input(
-                "Entrez la vitesse de simulation (en secondes par jour, par exemple, 2.0): "
-            )
+        vitesse_simulation = float(input("Entrez la vitesse de simulation (en secondes par jour, par exemple, 2.0): "))
+        return (
+            quantite_fourmis_initiale,
+            quantite_nourriture,
+            vitesse_simulation,
         )
-        return quantite_fourmis_initiale, quantite_nourriture, vitesse_simulation
     except ValueError:
         print("Valeur invalide. Veuillez réessayer.")
         return obtenir_entrees()
