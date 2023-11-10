@@ -1,3 +1,6 @@
+"""
+Fichier contenant la classe Egg.
+"""
 import random
 from .ant import Ant
 
@@ -17,10 +20,16 @@ class Egg:
 
     @property
     def is_hatched(self) -> bool:
+        """
+        Retourne si l'œuf est éclos ou non.
+        """
         return self._is_hatched
 
     @property
     def is_dead(self) -> bool:
+        """
+        Retourne si l'œuf est mort ou non.
+        """
         return self._is_dead
 
     def evolve(self) -> Ant or None:
@@ -31,6 +40,6 @@ class Egg:
         if self._age >= 3 and random.random() < 0.8:
             self._is_hatched = True
             return Ant()
-        elif self._age >= 3:
+        if self._age >= 3:
             self._is_hatched = True
         return None

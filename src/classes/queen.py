@@ -1,3 +1,6 @@
+"""
+Ce fichier contient la classe Queen.
+"""
 from typing import List
 from .ant import Ant
 from .egg import Egg
@@ -19,6 +22,9 @@ class Queen(Ant):
 
     @property
     def egg_laying_rate(self) -> int:
+        """
+        Retourne le nombre d'œufs que la reine pond par jour.
+        """
         return self._egg_laying_rate
 
     def lay_eggs(self) -> List[Egg]:

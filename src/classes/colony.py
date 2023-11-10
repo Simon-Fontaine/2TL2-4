@@ -1,3 +1,6 @@
+"""
+Ce fichier contient la classe Colony.
+"""
 from .ant import Ant
 from .food import Food
 from .queen import Queen
@@ -5,7 +8,7 @@ from .queen import Queen
 
 class Colony:
     """
-    Représente une colonie de fourmis avec des fourmis, des œufs, une reine et des réserves de nourriture.
+    Représente une colonie de fourmis est ses caractéristiques.
     """
 
     def __init__(self, initial_ant_count: int, initial_food_quantity: int):
@@ -28,26 +31,44 @@ class Colony:
 
     @property
     def ants(self):
+        """
+        Retourne la liste des fourmis.
+        """
         return self._ants
 
     @property
     def eggs(self):
+        """
+        Retourne la liste des œufs.
+        """
         return self._eggs
 
     @property
     def queen(self):
+        """
+        Retourne la reine.
+        """
         return self._queen
 
     @property
     def ant_count(self) -> int:
+        """
+        Retourne le nombre de fourmis vivantes.
+        """
         return len(self._ants) + int(self._queen.is_alive)
 
     @property
     def dead_ant_count(self) -> int:
+        """
+        Retourne le nombre de fourmis mortes.
+        """
         return self._born_ants - self.ant_count
 
     @property
     def day(self) -> int:
+        """
+        Retourne le jour actuel.
+        """
         return self._day
 
     def _update_ants(self):
@@ -65,7 +86,7 @@ class Colony:
 
     def _update_eggs(self):
         """
-        Met à jour tous les œufs, les fait éclore si possible, et ajoute une nouvelle fourmi à la colonie.
+        Met à jour tous les œufs, éclos si possible, ajoute une nouvelle fourmi à la colonie.
         """
         for egg in self._eggs:
             ant = egg.evolve()
@@ -85,7 +106,7 @@ class Colony:
 
     def update(self):
         """
-        Met à jour la colonie : vieillit les fourmis et les œufs et fait pondre de nouveaux œufs à la reine.
+        Update la colonie : vieillit les fourmis et les œufs et fait pondre de nouveaux œufs.
         """
         self._update_ants()
         self._update_eggs()
