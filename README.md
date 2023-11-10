@@ -2,6 +2,7 @@
 
 ## Arborescence du projet
 
+```shell
 │
 ├── src/
 │ ├── classes/
@@ -16,3 +17,4 @@
 │
 ├── .gitignore
 └── README.md
+```
