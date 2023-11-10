@@ -9,63 +9,79 @@ class Colony:
     """
 
     def __init__(self, initial_ant_count: int, initial_food_quantity: int):
-        self.ants = [Ant() for _ in range(initial_ant_count)]
-        self.eggs = []
-        self.queen = Queen()
-        self.food = Food(initial_food_quantity)
-        self.day = 0
-        self.born_ants = initial_ant_count + 1
+        self._ants = [Ant() for _ in range(initial_ant_count)]
+        self._eggs = []
+        self._queen = Queen()
+        self._food = Food(initial_food_quantity)
+        self._day = 0
+        self._born_ants = initial_ant_count + 1
 
     def __str__(self):
         return (
             f"Jour: {self.day}\n"
-            f"Œufs: {len(self.eggs)}\n"
+            f"Œufs: {len(self._eggs)}\n"
             f"Fourmis: {self.ant_count}\n"
-            f"Nourriture: {self.food.quantity}\n"
-            f"Reine vivante: {self.queen.is_alive}\n"
+            f"Nourriture: {self._food.quantity}\n"
+            f"Reine vivante: {self._queen.is_alive}\n"
             f"Fourmis mortes: {self.dead_ant_count}\n"
         )
 
     @property
+    def ants(self):
+        return self._ants
+
+    @property
+    def eggs(self):
+        return self._eggs
+
+    @property
+    def queen(self):
+        return self._queen
+
+    @property
     def ant_count(self) -> int:
-        return len(self.ants) + int(self.queen.is_alive)
+        return len(self._ants) + int(self._queen.is_alive)
 
     @property
     def dead_ant_count(self) -> int:
-        return self.born_ants - self.ant_count
+        return self._born_ants - self.ant_count
+
+    @property
+    def day(self) -> int:
+        return self._day
 
     def _update_ants(self):
         """
         Met à jour les fourmis, en les faisant vieillir et manger.
         """
-        self.queen.grow_older()
-        self.queen.eat(self.food, hunger=self.queen.egg_laying_rate)
+        self._queen.grow_older()
+        self._queen.eat(self._food, hunger=self._queen.egg_laying_rate)
 
-        for ant in self.ants:
+        for ant in self._ants:
             ant.grow_older()
-            ant.eat(self.food)
+            ant.eat(self._food)
 
-        self.ants = [ant for ant in self.ants if ant.is_alive]
+        self._ants = [ant for ant in self._ants if ant.is_alive]
 
     def _update_eggs(self):
         """
         Met à jour tous les œufs, les fait éclore si possible, et ajoute une nouvelle fourmi à la colonie.
         """
-        for egg in self.eggs:
+        for egg in self._eggs:
             ant = egg.evolve()
             if isinstance(ant, Ant):
-                self.ants.append(ant)
-                self.born_ants += 1
+                self._ants.append(ant)
+                self._born_ants += 1
 
         # filtre les œufs qui ont éclos ou qui sont morts
-        self.eggs = [egg for egg in self.eggs if not egg.is_hatched and not egg.is_dead]
+        self._eggs = [egg for egg in self._eggs if not egg.is_hatched and not egg.is_dead]
 
     def _lay_eggs(self):
         """
         La reine pond de nouveaux œufs si elle est en vie.
         """
-        if self.queen.is_alive:
-            self.eggs.extend(self.queen.lay_eggs())
+        if self._queen.is_alive:
+            self._eggs.extend(self._queen.lay_eggs())
 
     def update(self):
         """
@@ -74,4 +90,4 @@ class Colony:
         self._update_ants()
         self._update_eggs()
         self._lay_eggs()
-        self.day += 1
+        self._day += 1
