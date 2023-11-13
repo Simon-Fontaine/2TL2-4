@@ -2,7 +2,7 @@
 
 ## Arborescence du projet
 
-```shell
+```
 │
 ├── src/
 │ ├── classes/

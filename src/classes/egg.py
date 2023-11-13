@@ -3,6 +3,7 @@ Fichier contenant la classe Egg.
 """
 import random
 from .ant import Ant
+from .settings import EGG_GROWING_TIME, EGG_HATCHING_RATE
 
 
 class Egg:
@@ -37,9 +38,9 @@ class Egg:
         Fait vieillir l'œuf et détermine s'il éclot ou meurt.
         """
         self._age += 1
-        if self._age >= 3 and random.random() < 0.8:
+        if self._age >= EGG_GROWING_TIME and random.random() < EGG_HATCHING_RATE:
             self._is_hatched = True
             return Ant()
-        if self._age >= 3:
+        if self._age >= EGG_GROWING_TIME:
             self._is_hatched = True
         return None
