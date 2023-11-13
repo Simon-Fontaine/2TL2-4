@@ -42,7 +42,7 @@ class Colony:
             f"Œufs: {len(self._eggs)}\n"
             f"Fourmis: {self.ant_count}\n"
             f"Nourriture: {self._food.quantity}\n"
-            f"Reine vivante: {self._queen.is_alive}\n"
+            f"Reine vivante: {'Oui' if self._queen.is_alive else 'Non'}\n"
             f"Fourmis mortes: {self.dead_ant_count}\n"
             f"{separator}\n"
         )
