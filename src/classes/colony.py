@@ -35,7 +35,7 @@ class Colony:
         self._born_ants = initial_ant_count + 1
 
     def __str__(self):
-        separator = "=" * 40  # A line of 40 '=' characters
+        separator = "=" * 40
         return (
             f"{separator}\n"
             f"{days_to_years_months_days(self.day)}\n"
