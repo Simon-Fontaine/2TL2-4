@@ -22,7 +22,7 @@ def print_separator():
     """
     Affiche un séparateur jaune.
     """
-    print(colored("-" * 30, "yellow"))
+    print(colored("=" * 40, "yellow"))
 
 
 def main():
@@ -61,7 +61,18 @@ def main():
 
     while colony.ants or colony.queen.is_alive or colony.eggs:
         colony.update()
-        print(colony)
+        print_separator()
+        cprint(colony.days_to_years_months_days, "magenta", attrs=["bold"])
+        cprint(f"Total: {colony.day} jours\n", "blue", attrs=["bold"])
+        cprint(f"Oeufs: {len(colony.eggs)}", "cyan")
+        cprint(f"Fourmis: {colony.ant_count}", "cyan")
+        cprint(f"Nourriture: {colony.food.quantity}", "cyan")
+        cprint(
+            f"Reine vivante: {'Oui' if colony.queen.is_alive else 'Non'}",
+            "green" if colony.queen.is_alive else "red",
+        )
+        cprint(f"Fourmis mortes: {colony.dead_ant_count}", "cyan")
+        print_separator()
         time.sleep(args.speed)
 
     cprint("La simulation est terminée.", "magenta", attrs=["bold"])

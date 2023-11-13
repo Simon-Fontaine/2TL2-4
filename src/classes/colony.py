@@ -6,21 +6,6 @@ from .food import Food
 from .queen import Queen
 
 
-def days_to_years_months_days(total_days):
-    """
-    Convertit un nombre de jours en années, mois et jours.
-    """
-    days_in_year = 365.25
-    days_in_month = days_in_year / 12
-
-    years = int(total_days // days_in_year)
-    remaining_days = total_days % days_in_year
-    months = int(remaining_days // days_in_month)
-    days = int(remaining_days % days_in_month)
-
-    return f"~ {years} ans, {months} mois et {days} jours\nTotal: {total_days} jours\n"
-
-
 class Colony:
     """
     Représente une colonie de fourmis est ses caractéristiques.
@@ -38,14 +23,36 @@ class Colony:
         separator = "=" * 40
         return (
             f"{separator}\n"
-            f"{days_to_years_months_days(self.day)}\n"
+            f"{self.days_to_years_months_days}\n"
             f"Œufs: {len(self._eggs)}\n"
             f"Fourmis: {self.ant_count}\n"
-            f"Nourriture: {self._food.quantity}\n"
+            f"Nourriture: {self.food.quantity}\n"
             f"Reine vivante: {'Oui' if self._queen.is_alive else 'Non'}\n"
             f"Fourmis mortes: {self.dead_ant_count}\n"
             f"{separator}\n"
         )
+
+    @property
+    def days_to_years_months_days(self):
+        """
+        Convertit le nombre de jours en années, mois et jours.
+        """
+        days_in_year = 365.25
+        days_in_month = days_in_year / 12
+
+        years = int(self._day // days_in_year)
+        remaining_days = self._day % days_in_year
+        months = int(remaining_days // days_in_month)
+        days = int(remaining_days % days_in_month)
+
+        return f"~ {years} ans, {months} mois et {days} jours"
+
+    @property
+    def food(self):
+        """
+        Retourne la nourriture.
+        """
+        return self._food
 
     @property
     def ants(self):
