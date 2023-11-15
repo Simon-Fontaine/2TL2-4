@@ -3,7 +3,7 @@ import time
 from rich.console import Console
 from rich.table import Table
 from rich.live import Live
-from rich.prompt import Confirm, IntPrompt
+from rich.prompt import Confirm, IntPrompt, FloatPrompt
 
 from classes.colony import Colony
 from classes.settings import (
@@ -74,7 +74,7 @@ def main():
 
     ants = IntPrompt.ask("Entrez le nombre initial de fourmis", default=100)
     food = IntPrompt.ask("Entrez la quantité initiale de nourriture", default=10000)
-    speed = IntPrompt.ask("Entrez la vitesse de la simulation en secondes par jour", default=0)
+    speed = FloatPrompt.ask("Entrez la vitesse de la simulation en secondes par jour", default=0.2)
 
     console.print("Récapitulatif des Paramètres de Simulation:")
     console.print(print_parameters(ants, food, speed))
