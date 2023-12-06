@@ -1,34 +1,78 @@
 """
-Fichier contenant la classe Food.
+Ce module contient la classe Food
 """
+
+from src.classes.settings import Settings
 
 
 class Food:
     """
-    Représente les réserves de nourriture de la colonie.
+    Classe représentant la nourritures
     """
 
-    def __init__(self, initial_quantity: int):
-        self._quantity = initial_quantity
+    def __init__(self, settings: Settings):
+        self.__quantity = settings.initial_food_quantity
 
-    def __str__(self):
-        return f"Nourriture: {self._quantity}\n"
+    def __validate_value(
+        self,
+        value,
+        value_type,
+        error_message="Invalid value",
+        min_value=None,
+        max_value=None,
+    ):
+        """
+        Valide une valeur. Vérifie le type et la plage de la valeur si c'est numérique.
+        """
+        if not isinstance(value, value_type):
+            raise TypeError(
+                f"{error_message}: Expected type {value_type}, got {type(value)} instead."
+            )
+
+        if isinstance(value, (int, float)):
+            if min_value is not None and value < min_value:
+                raise ValueError(
+                    f"{error_message}: Value {value} is less than minimum allowed {min_value}."
+                )
+            if max_value is not None and value > max_value:
+                raise ValueError(
+                    f"{error_message}: Value {value} is greater than maximum allowed {max_value}."
+                )
 
     @property
-    def quantity(self) -> int:
+    def quantity(self):
         """
-        Retourne la quantité de nourriture restante.
+        Quantité de nourriture
         """
-        return self._quantity
+        return self.__quantity
 
-    def consume(self, amount: int):
+    @quantity.setter
+    def quantity(self, value):
         """
-        Consomme une certaine quantité de nourriture.
+        Modifie la quantité de nourriture
         """
-        self._quantity = max(self._quantity - amount, 0)
+        self.__validate_value(
+            value,
+            (int, float),
+            min_value=0,
+            error_message="Invalid quantity: Value must be a positive number",
+        )
+        self.__quantity = value
 
-    def add(self, amount: int):
+    def remove(self, amount: (int, float) = 1):
         """
-        Ajoute une certaine quantité de nourriture.
+        Retire de la nourriture
         """
-        self._quantity += amount
+        self.__quantity = max(self.__quantity - amount, 0)
+
+    def add(self, amount: (int, float) = 1):
+        """
+        Ajoute de la nourriture
+        """
+        self.__quantity += amount
+
+    def to_dict(self):
+        """
+        Convertit la nourriture en dictionnaire
+        """
+        return {"quantity": self.quantity}

@@ -1,34 +1,37 @@
 """
-Ce fichier contient la classe Queen.
+Ce module contient la classe Queen
 """
-from typing import List
-from .ant import Ant
-from .egg import Egg
-from .settings import MAX_QUEEN_AGE, QUEEN_EGG_LAYING_RATE
+
+import random
+
+from src.classes.food import Food
+from src.classes.settings import Settings
+from src.classes.enums import State, Job
+
+from src.classes.ant import Ant
 
 
 class Queen(Ant):
     """
-    Représente la reine de la colonie.
+    Classe représentant une reine
     """
 
-    def __init__(self):
-        super().__init__()
-        self.max_age = MAX_QUEEN_AGE
-        self._egg_laying_rate = QUEEN_EGG_LAYING_RATE
+    def __init__(self, settings: Settings, food: Food):
+        super().__init__(settings, food)
+        self.max_age = random.randint(
+            settings.queen_avg_age - settings.queen_avg_age_variation,
+            settings.queen_avg_age + settings.queen_avg_age_variation,
+        )
+        self.is_worker = Job.NOT_WORKER
 
-    def __str__(self):
-        return f"Rein: {self.is_alive}\nAge: {self.age}\nŒufs: {self._egg_laying_rate}\n"
-
-    @property
-    def egg_laying_rate(self) -> int:
+    def evolve(self):
         """
-        Retourne le nombre d'œufs que la reine pond par jour.
+        Fait évoluer la reine
         """
-        return self._egg_laying_rate
-
-    def lay_eggs(self) -> List[Egg]:
-        """
-        La reine pond des œufs si elle est en vie.
-        """
-        return [Egg() for _ in range(self._egg_laying_rate)]
+        if self.is_alive and self.food.quantity >= self.settings.queen_hunger:
+            self.age += 1
+            self.food.remove(self.settings.queen_hunger)
+            if self.age >= self.max_age:
+                self.state = State.DEAD
+        else:
+            self.state = State.DEAD
