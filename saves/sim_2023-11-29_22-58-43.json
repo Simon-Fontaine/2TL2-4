@@ -1,0 +1,43 @@
+{
+  "settings": {
+    "simulation_seed": 1701173781,
+    "simulation_speed": 0.0,
+    "initial_food_quantity": 30000.0,
+    "initial_ant_quantity": 100,
+    "ant_avg_age": 90,
+    "ant_avg_age_variation": 20,
+    "ant_worker_chance": 0.95,
+    "min_food_multiplier": 0.5,
+    "max_food_multiplier": 1.5,
+    "ant_hunger": 0.3,
+    "ant_random_death_chance": 0.01,
+    "queen_avg_age": 1825,
+    "queen_avg_age_variation": 365,
+    "queen_hunger": 10.0,
+    "queen_laying_rate": 5,
+    "queen_avg_eggs": 500,
+    "queen_avg_egg_variation": 150,
+    "egg_avg_age": 14,
+    "egg_avg_age_variation": 7,
+    "egg_hunger": 0.1,
+    "egg_evolve_chance": 0.9,
+    "queen_avg_egg_age": 60,
+    "queen_avg_egg_age_variation": 14,
+    "queen_egg_hunger": 1.0,
+    "queen_egg_evolve_chance": 0.5
+  },
+  "colony": {
+    "day": 2268,
+    "queen": {
+      "age": 2141,
+      "max_age": 2141,
+      "state": 0,
+      "profession": "worker"
+    },
+    "food": {
+      "quantity": 7195818.901771951
+    },
+    "ants": [],
+    "eggs": []
+  }
+}

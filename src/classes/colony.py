@@ -1,139 +1,172 @@
 """
-Ce fichier contient la classe Colony.
+Ce module contient la classe Colony
 """
-from .ant import Ant
-from .food import Food
-from .queen import Queen
+
+import random
+
+
+from src.classes.food import Food
+from src.classes.settings import Settings
+from src.classes.enums import Job
+
+from src.classes.ant import Ant
+from src.classes.egg import Egg
+from src.classes.queen import Queen
 
 
 class Colony:
     """
-    Représente une colonie de fourmis est ses caractéristiques.
+    Classe représentant une colonie
     """
 
-    def __init__(self, initial_ant_count: int, initial_food_quantity: int):
-        self._ants = [Ant() for _ in range(initial_ant_count)]
-        self._eggs = []
-        self._queen = Queen()
-        self._food = Food(initial_food_quantity)
-        self._day = 0
-        self._born_ants = initial_ant_count + 1
-
-    def __str__(self):
-        separator = "=" * 40
-        return (
-            f"{separator}\n"
-            f"{self.days_to_years_months_days}\n"
-            f"Œufs: {len(self._eggs)}\n"
-            f"Fourmis: {self.ant_count}\n"
-            f"Nourriture: {self.food.quantity}\n"
-            f"Reine vivante: {'Oui' if self._queen.is_alive else 'Non'}\n"
-            f"Fourmis mortes: {self.dead_ant_count}\n"
-            f"{separator}\n"
-        )
-
-    @property
-    def days_to_years_months_days(self):
-        """
-        Convertit le nombre de jours en années, mois et jours.
-        """
-        days_in_year = 365.25
-        days_in_month = days_in_year / 12
-
-        years = int(self._day // days_in_year)
-        remaining_days = self._day % days_in_year
-        months = int(remaining_days // days_in_month)
-        days = int(remaining_days % days_in_month)
-
-        return f"~ {years} ans, {months} mois et {days} jours"
-
-    @property
-    def food(self):
-        """
-        Retourne la nourriture.
-        """
-        return self._food
-
-    @property
-    def ants(self):
-        """
-        Retourne la liste des fourmis.
-        """
-        return self._ants
-
-    @property
-    def eggs(self):
-        """
-        Retourne la liste des œufs.
-        """
-        return self._eggs
-
-    @property
-    def queen(self):
-        """
-        Retourne la reine.
-        """
-        return self._queen
-
-    @property
-    def ant_count(self) -> int:
-        """
-        Retourne le nombre de fourmis vivantes.
-        """
-        return len(self._ants) + int(self._queen.is_alive)
-
-    @property
-    def dead_ant_count(self) -> int:
-        """
-        Retourne le nombre de fourmis mortes.
-        """
-        return self._born_ants - self.ant_count
+    def __init__(self, settings: Settings, food: Food):
+        self.__day = 0
+        self.__ants = [
+            Ant(settings, food) for _ in range(settings.initial_ant_quantity)
+        ]
+        self.__born_ants = settings.initial_ant_quantity + 1
+        self.__queen = Queen(settings, food)
+        self.__eggs = []
+        self.__settings = settings
+        self.__food = food
 
     @property
     def day(self) -> int:
         """
-        Retourne le jour actuel.
+        Jour de la colonie
         """
-        return self._day
+        return self.__day
 
-    def _update_ants(self):
+    @property
+    def queen(self) -> Queen:
         """
-        Met à jour les fourmis, en les faisant vieillir et manger.
+        Reine de la colonie
         """
-        self._queen.grow_older()
-        self._queen.eat(self._food, hunger=self._queen.egg_laying_rate)
+        return self.__queen
 
-        for ant in self._ants:
-            ant.grow_older()
-            ant.eat(self._food)
+    @property
+    def food(self) -> Food:
+        """
+        Nourriture de la colonie
+        """
+        return self.__food
 
-        self._ants = [ant for ant in self._ants if ant.is_alive]
+    @property
+    def ants(self) -> [Ant]:
+        """
+        Fourmis de la colonie
+        """
+        return self.__ants
 
-    def _update_eggs(self):
+    @property
+    def eggs(self) -> [Egg]:
         """
-        Met à jour tous les œufs, éclos si possible, ajoute une nouvelle fourmi à la colonie.
+        Oeufs de la colonie
         """
-        for egg in self._eggs:
-            ant = egg.evolve()
-            if isinstance(ant, Ant):
-                self._ants.append(ant)
-                self._born_ants += 1
+        return self.__eggs
 
-        # filtre les œufs qui ont éclos ou qui sont morts
-        self._eggs = [egg for egg in self._eggs if not egg.is_hatched and not egg.is_dead]
+    @property
+    def settings(self) -> Settings:
+        """
+        Paramètres de la colonie
+        """
+        return self.__settings
 
-    def _lay_eggs(self):
+    def ant_count(self) -> int:
         """
-        La reine pond de nouveaux œufs si elle est en vie.
+        Nombre de fourmis
         """
-        if self._queen.is_alive:
-            self._eggs.extend(self._queen.lay_eggs())
+        return len(self.__ants) + int(self.__queen.is_alive)
 
-    def update(self):
+    def dead_ant_count(self) -> int:
         """
-        Update la colonie : vieillit les fourmis et les œufs et fait pondre de nouveaux œufs.
+        Nombre de fourmis mortes
         """
-        self._update_ants()
-        self._update_eggs()
-        self._lay_eggs()
-        self._day += 1
+        return self.__born_ants - self.ant_count()
+
+    def worker_count(self) -> int:
+        """
+        Nombre d'ouvrières
+        """
+        return len(
+            [worker for worker in self.__ants if worker.profession == Job.WORKER]
+        )
+
+    def egg_count(self) -> int:
+        """
+        Nombre d'oeufs
+        """
+        return len(self.__eggs)
+
+    def __update_food(self):
+        self.__food.add(
+            random.randint(
+                round(self.worker_count() * self.__settings.min_food_multiplier),
+                round(self.worker_count() * self.__settings.max_food_multiplier),
+            )
+        )
+
+    def __update_ants(self):
+        self.__queen.evolve()
+        if self.__queen.is_alive and self.__queen.age >= self.__queen.max_age - 1:
+            self.__lay_successor_egg()
+
+        for ant in self.__ants:
+            ant.evolve()
+        self.__ants = [ant for ant in self.__ants if ant.is_alive]
+
+    def __lay_successor_egg(self):
+        if self.__queen.is_alive and self.food.quantity >= self.settings.queen_hunger:
+            self.food.remove(self.settings.queen_hunger)
+            self.__eggs.append(Egg(self.settings, self.food, is_queen_egg=True))
+
+    def __lay_eggs(self):
+        if self.__day % self.__settings.queen_laying_rate == 0:
+            if self.queen.is_alive and self.food.quantity >= self.settings.queen_hunger:
+                self.food.remove(self.settings.queen_hunger)
+                for _ in range(
+                    random.randint(
+                        self.settings.queen_avg_eggs
+                        - self.settings.queen_avg_egg_variation,
+                        self.settings.queen_avg_eggs
+                        + self.settings.queen_avg_egg_variation,
+                    )
+                ):
+                    self.__eggs.append(Egg(self.settings, self.food))
+
+    def __update_eggs(self):
+        new_queen = None
+        for egg in self.__eggs:
+            new_ant = egg.evolve()
+            if new_ant:
+                if isinstance(new_ant, Queen):
+                    new_queen = new_ant
+                else:
+                    self.__ants.append(new_ant)
+                    self.__born_ants += 1
+        self.__eggs = [egg for egg in self.__eggs if egg.is_alive]
+
+        if new_queen and not self.__queen.is_alive:
+            self.__queen = new_queen
+
+    def evolve(self):
+        """
+        Fait évoluer la colonie d'un jour
+        """
+        self.__update_food()
+        self.__update_ants()
+        self.__update_eggs()
+        self.__lay_eggs()
+        self.__day += 1
+
+    def to_dict(self):
+        """
+        Convertit la colonie en dictionnaire
+        """
+        return {
+            "day": self.day,
+            "queen": self.queen.to_dict(),
+            "food": self.food.to_dict(),
+            "ants": [ant.to_dict() for ant in self.ants],
+            "eggs": [egg.to_dict() for egg in self.eggs],
+        }
