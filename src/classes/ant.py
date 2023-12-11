@@ -9,12 +9,14 @@ from src.classes.settings import Settings
 from src.classes.enums import State, Job
 
 
+
 class Ant:
     """
     Classe représentant une fourmi
     """
 
     def __init__(self, settings: Settings, food: Food):
+        """ Ceci construit les paramètres de la fourmis
 
         PRE : Settings: instance de la classe Settings
               food: int
