@@ -23,6 +23,12 @@ class Food:
     ):
         """
         Valide une valeur. Vérifie le type et la plage de la valeur si c'est numérique.
+
+        PRE : vérifie si la valeur ajouter est correct
+
+        POST : informe du type d'erreur
+
+        RAISE : TypeError et ValueError
         """
         if not isinstance(value, value_type):
             raise TypeError(
@@ -50,6 +56,12 @@ class Food:
     def quantity(self, value):
         """
         Modifie la quantité de nourriture
+
+        PRE : quantité de nourritures(positive)
+
+        POST : quantité de nourritures(positive)
+
+        RAISE : ValueError
         """
         self.__validate_value(
             value,
