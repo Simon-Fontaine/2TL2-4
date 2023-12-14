@@ -18,6 +18,22 @@ class Egg:
     """
 
     def __init__(self, settings: Settings, food: Food, is_queen_egg=False):
+        """
+        Ceci construit les paramètres des eufs
+
+        PRE : Settings : instance de la classe settings
+              food : nourriture de la colonie(int)
+              is_queen_alive : état de l'oeuf reine(false par défaut)
+
+        POST : __age: age de l'oeuf = 0
+               __max_age : age de l'oeuf avant de devenir fourmis
+               __state : état alive
+               __is_queen_egg : informe si c'est un oeuf reine
+               __settings : paramètre
+               __food : nombre de nourriture
+        
+        RAISE : tous les cas sont gèrés à l'aide de la méthode __validate_value
+        """
         self.__age = 0
         self.__max_age = (
             random.randint(
@@ -46,6 +62,12 @@ class Egg:
     ):
         """
         Valide une valeur. Vérifie le type et la plage de la valeur si c'est numérique.
+
+        PRE : vérifie si la valeur ajouter est correct
+
+        POST : informe du type d'erreur
+
+        RAISE : TypeError et ValueError
         """
         if not isinstance(value, value_type):
             raise TypeError(
