@@ -20,6 +20,21 @@ class Colony:
     """
 
     def __init__(self, settings: Settings, food: Food):
+        """
+        Ceci consrtuit les paramètres de la colonie
+
+        PRE : Settings : instance de la classe settings
+              food : nourriture de la colonie(int)
+
+        POST : __day : jour de la colonie(initialiser à 0 au début de la simulation)
+               __ants : nombre de fourmis dans la colonie(array)
+               __born_ants : nombre de fourmis née ce jour la 
+               __queen : utilise la classe queen pour définir la reine
+               __eggs : array du nombre oeufs crée ce jour la
+               __settings : paramètre de la colonie
+               __foods : nourriture de la colonie
+        
+        """
         self.__day = 0
         self.__ants = [
             Ant(settings, food) for _ in range(settings.initial_ant_quantity)
@@ -29,6 +44,7 @@ class Colony:
         self.__eggs = []
         self.__settings = settings
         self.__food = food
+
 
     @property
     def day(self) -> int:
@@ -107,6 +123,7 @@ class Colony:
         )
 
     def __update_ants(self):
+        
         self.__queen.evolve()
         if self.__queen.is_alive and self.__queen.age >= self.__queen.max_age - 1:
             self.__lay_successor_egg()
@@ -116,11 +133,17 @@ class Colony:
         self.__ants = [ant for ant in self.__ants if ant.is_alive]
 
     def __lay_successor_egg(self):
+        """
+        pond un oeuf reine
+        """
         if self.__queen.is_alive and self.food.quantity >= self.settings.queen_hunger:
             self.food.remove(self.settings.queen_hunger)
             self.__eggs.append(Egg(self.settings, self.food, is_queen_egg=True))
 
     def __lay_eggs(self):
+        """
+        pond des oeuf
+        """
         if self.__day % self.__settings.queen_laying_rate == 0:
             if self.queen.is_alive and self.food.quantity >= self.settings.queen_hunger:
                 self.food.remove(self.settings.queen_hunger)
@@ -135,6 +158,9 @@ class Colony:
                     self.__eggs.append(Egg(self.settings, self.food))
 
     def __update_eggs(self):
+        """
+        met à jour le nombre d'oeuf
+        """
         new_queen = None
         for egg in self.__eggs:
             new_ant = egg.evolve()
