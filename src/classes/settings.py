@@ -76,6 +76,12 @@ class Settings:
     ):
         """
         Valide une valeur. Vérifie le type et la plage de la valeur si c'est numérique.
+
+        PRE : vérifie si la valeur ajouter est correct
+
+        POST : informe du type d'erreur
+
+        RAISE : TypeError et ValueError
         """
         if not isinstance(value, value_type):
             raise TypeError(
