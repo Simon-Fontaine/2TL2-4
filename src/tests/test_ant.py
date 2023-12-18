@@ -4,10 +4,6 @@ Ce module test la classe Ant
 import unittest
 import random
 
-import sys
-
-sys.path.append("C:/Users/simon/Documents/GitHub/2TL2-dev/")
-
 from src.classes.ant import Ant
 from src.classes.food import Food
 from src.classes.settings import Settings
