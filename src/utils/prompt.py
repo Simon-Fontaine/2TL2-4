@@ -26,6 +26,10 @@ def prompt_initial_settings(console: Console) -> Settings:
         "Initial simulation speed (in seconds)",
         default=default_settings.simulation_speed,
     )
+    simulation_duration = IntPrompt.ask(
+        "Simulation duration (in days) (-1 = infinite)",
+        default=default_settings.simulation_duration,
+    )
     initial_ant_quantity = IntPrompt.ask(
         "Initial ant quantity", default=default_settings.initial_ant_quantity
     )
@@ -94,6 +98,7 @@ def prompt_initial_settings(console: Console) -> Settings:
     return Settings(
         simulation_seed=simulation_seed if simulation_seed != 0 else int(time.time()),
         simulation_speed=simulation_speed,
+        simulation_duration=simulation_duration,
         initial_ant_quantity=initial_ant_quantity,
         initial_food_quantity=initial_food_quantity,
         ant_avg_age=ant_avg_age,

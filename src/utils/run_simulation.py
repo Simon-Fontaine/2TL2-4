@@ -41,12 +41,12 @@ def run_simulation(console: Console, settings: Settings) -> bool:
 
     sim_food = Food(settings)
     sim_colony = Colony(settings, sim_food)
-    simulation_duration = 100
+    simulation_duration = settings.simulation_duration
 
     with Live(auto_refresh=False) as live:
-        while (
-            sim_colony.ants or sim_colony.queen.is_alive or sim_colony.eggs
-        ) and sim_colony.day < simulation_duration:
+        while (sim_colony.ants or sim_colony.queen.is_alive or sim_colony.eggs) and (
+            simulation_duration == -1 or sim_colony.day < simulation_duration
+        ):
             sim_colony.evolve()
             live.update(
                 create_table(

@@ -2,6 +2,7 @@
   "settings": {
     "simulation_seed": 1701173781,
     "simulation_speed": 0.0,
+    "simulation_duration": -1,
     "initial_food_quantity": 30000.0,
     "initial_ant_quantity": 100,
     "ant_avg_age": 90,
@@ -25,19 +26,5 @@
     "queen_avg_egg_age_variation": 14,
     "queen_egg_hunger": 1.0,
     "queen_egg_evolve_chance": 0.5
-  },
-  "colony": {
-    "day": 2268,
-    "queen": {
-      "age": 2141,
-      "max_age": 2141,
-      "state": 0,
-      "is_worker": false
-    },
-    "food": {
-      "quantity": 7195818.901771951
-    },
-    "ants": [],
-    "eggs": []
   }
 }

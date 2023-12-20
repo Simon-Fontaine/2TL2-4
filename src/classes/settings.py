@@ -16,6 +16,7 @@ class Settings:
         self,
         simulation_seed: int = 1234,
         simulation_speed: float = 1.0,
+        simulation_duration: int = -1,
         initial_food_quantity: float = 30000.0,
         initial_ant_quantity: int = 100,
         ant_avg_age: int = 90,
@@ -42,6 +43,7 @@ class Settings:
     ):
         self.simulation_seed = simulation_seed
         self.simulation_speed = simulation_speed
+        self.simulation_duration = simulation_duration
         self.initial_food_quantity = initial_food_quantity
         self.initial_ant_quantity = initial_ant_quantity
         self.ant_avg_age = ant_avg_age
@@ -137,6 +139,26 @@ class Settings:
             error_message="Simulation speed must be a positive float",
         )
         self.__simulation_speed = value
+
+    @property
+    def simulation_duration(self) -> int:
+        """
+        Durée de la simulation.
+        """
+        return self.__simulation_duration
+
+    @simulation_duration.setter
+    def simulation_duration(self, value: int):
+        """
+        Modifie la durée de la simulation.
+        """
+        self.__validate_value(
+            value,
+            int,
+            min_value=-1,
+            error_message="Simulation duration must be a positive integer",
+        )
+        self.__simulation_duration = value
 
     @property
     def initial_food_quantity(self) -> float:
@@ -609,6 +631,7 @@ class Settings:
         return {
             "simulation_seed": self.simulation_seed,
             "simulation_speed": self.simulation_speed,
+            "simulation_duration": self.simulation_duration,
             "initial_food_quantity": self.initial_food_quantity,
             "initial_ant_quantity": self.initial_ant_quantity,
             "ant_avg_age": self.ant_avg_age,
