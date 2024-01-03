@@ -19,7 +19,7 @@ class Ant:
         """ Ceci construit les paramètres de la fourmis
 
         PRE : Settings: instance de la classe Settings
-              food: int
+              food: instance de la classe Food
         POST : __age: age de la fourmis == 0
                __max_age: age de mort de la fourmis définis aléatoirement en fonction des paramètres
                choisis

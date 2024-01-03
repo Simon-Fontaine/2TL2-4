@@ -23,8 +23,8 @@ class Colony:
         """
         Ceci consrtuit les paramètres de la colonie
 
-        PRE : Settings : instance de la classe settings
-              food : nourriture de la colonie(int)
+        PRE : Settings : instance de la classe Settings
+              food : instance de la classe Food
 
         POST : __day : jour de la colonie(initialiser à 0 au début de la simulation)
                __ants : nombre de fourmis dans la colonie(array)
