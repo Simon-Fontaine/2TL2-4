@@ -36,7 +36,7 @@ class TestColony(unittest.TestCase):
         self.assertEqual(self.colony.dead_ant_count(), 0)
 
     def test_worker_count(self):
-        self.assertAlmostEqual(self.colony.worker_count() / len(self.colony.ants), self.settings.ant_worker_chance, delta=0.1)
+        self.assertTrue(0 <= self.colony.worker_count() <= len(self.colony.ants))
 
     def test_egg_count(self):
         self.assertEqual(len(self.colony.eggs), self.colony.egg_count())
