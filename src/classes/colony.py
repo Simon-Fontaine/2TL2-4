@@ -90,19 +90,28 @@ class Colony:
 
     def ant_count(self) -> int:
         """
-        Nombre de fourmis
+        Retourne le nombre de fourmis
+
+        PRE: pas de préconditions spécifiques
+        POST : retourne un int, le nombre de fourmis
         """
         return len(self.__ants) + int(self.__queen.is_alive)
 
     def dead_ant_count(self) -> int:
         """
-        Nombre de fourmis mortes
+        Retourne le nombre de fourmis mortes
+
+        PRE: pas de préconditions spécifiques
+        POST : retourne un int, le nombre de fourmis mortes
         """
         return self.__born_ants - self.ant_count()
 
     def worker_count(self) -> int:
         """
-        Nombre d'ouvrières
+        Retourne le nombre d'ouvrières
+
+        PRE: pas de préconditions spécifiques
+        POST : retourne un int, le nombre de fourmis WORKER
         """
         return len(
             [worker for worker in self.__ants if worker.profession == Job.WORKER]
@@ -110,7 +119,10 @@ class Colony:
 
     def egg_count(self) -> int:
         """
-        Nombre d'oeufs
+        Retourne le nombre d'oeufs
+
+        PRE: pas de préconditions spécifiques
+        POST : retourne un int, le nombres d'oeufs
         """
         return len(self.__eggs)
 
@@ -178,6 +190,13 @@ class Colony:
     def evolve(self):
         """
         Fait évoluer la colonie d'un jour
+
+        PRE: pas de préconditions spécifiques
+        POST: self.__food = le nombre de nourriture avant l'evolution - la consommation de la fourmilière
+              self.__ants = le nombre de fourmis avant l'evolution - le nombre de fourmis mortes entre temps
+              self.__eggs += le nombre d'oeufs pondus
+              self.__day += 1
+
         """
         self.__update_food()
         self.__update_ants()
@@ -188,6 +207,9 @@ class Colony:
     def to_dict(self):
         """
         Convertit la colonie en dictionnaire
+
+        PRE: pas de préconditions spécifiques
+        POST: retourne un dict avec toutes les données importantes
         """
         return {
             "day": self.day,
