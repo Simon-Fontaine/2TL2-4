@@ -3,6 +3,8 @@ Ce module test la classe colony
 """
 
 import unittest
+import random
+
 from src.classes.colony import Colony
 from src.classes.settings import Settings
 from src.classes.food import Food
@@ -13,10 +15,16 @@ class TestColony(unittest.TestCase):
 
     def setUp(self):
         """Set up des classes nécessaires pour les tests."""
+        random.seed(42)
+
         self.settings = Settings()
         self.food = Food(self.settings)
         self.colony = Colony(self.settings, self.food)
         self.queen = Queen(self.settings, self.food)
+
+    def tearDown(self):
+        """Réinitialise la graine après chaque test."""
+        random.seed()
 
     def test_initial_state(self):
         """Test si la colonie est créée avec les bons attributs."""
@@ -43,21 +51,53 @@ class TestColony(unittest.TestCase):
 
     def test_evolve(self):
         self.colony.evolve()
-        # Update day
+        # check day
         self.assertEqual(self.colony.day, 1)
-        # Update food
-        ants_hunger = self.settings.ant_hunger * self.colony.ant_count()
-        queen_hunger = self.settings.queen_hunger * int(self.colony.queen.is_alive)
-        start_food = self.settings.initial_food_quantity - ants_hunger - queen_hunger*2
-        minimum = start_food + round(self.colony.worker_count() * self.settings.min_food_multiplier)
-        maximum = start_food + round(self.colony.worker_count() * self.settings.max_food_multiplier)
-        self.assertTrue(minimum <= self.colony.food.quantity <= maximum)
-        # Update ants
-        self.assertEqual(self.colony.ants[0].age, 1)
-        # Update eggs
-        minimum_eggs = self.settings.queen_avg_eggs - self.settings.queen_avg_egg_variation
-        maximum_eggs = self.settings.queen_avg_eggs + self.settings.queen_avg_egg_variation
-        self.assertTrue(minimum_eggs <= len(self.colony.eggs) <= maximum_eggs)
+        # check food
+        self.assertEqual(round(self.colony.food.quantity), round(30052))
+        # check ants
+        self.assertEqual(self.colony.ant_count(), 99)
+        self.assertEqual(self.colony.worker_count(), 92)
+        self.assertEqual(self.colony.dead_ant_count(), 2)
+        # check queen
+        self.assertEqual(self.colony.queen.is_alive, True)
+        # check eggs
+        self.assertEqual(self.colony.egg_count(), 429)
+
+    def test_evolve_x4(self):
+        # evolve 4x
+        for i in range(1, 5):
+            self.colony.evolve()
+
+        # check day
+        self.assertEqual(self.colony.day, 4)
+        # check food
+        self.assertEqual(round(self.colony.food.quantity), round(30073))
+        # check ants
+        self.assertEqual(self.colony.ant_count(), 98)
+        self.assertEqual(self.colony.worker_count(), 91)
+        self.assertEqual(self.colony.dead_ant_count(), 3)
+        # check queen
+        self.assertEqual(self.colony.queen.is_alive, True)
+        # check eggs
+        self.assertEqual(self.colony.egg_count(), 429)
+
+    def test_evolve_x20(self):
+        for i in range(1, 21):
+            self.colony.evolve()
+
+        # check day
+        self.assertEqual(self.colony.day, 20)
+        # check food
+        self.assertEqual(round(self.colony.food.quantity), round(30779))
+        # check ants
+        self.assertEqual(self.colony.ant_count(), 608)
+        self.assertEqual(self.colony.worker_count(), 573)
+        self.assertEqual(self.colony.dead_ant_count(), 35)
+        # chek queen
+        self.assertEqual(self.colony.queen.is_alive, True)
+        # check eggs
+        self.assertEqual(self.colony.egg_count(), 1216)
 
 
 if __name__ == "__main__":
